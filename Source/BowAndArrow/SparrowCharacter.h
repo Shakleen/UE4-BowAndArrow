@@ -22,4 +22,9 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private:
+	void BindMovementFunctions(UInputComponent* PlayerInputComponent);
+	void MoveForwardOrBackward(float Value);
+	void MoveRightOrLeft(float Value);
+	void MoveCharacter(EAxis::Type Axis, float Value);
 };
