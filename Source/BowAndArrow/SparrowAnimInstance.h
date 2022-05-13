@@ -15,10 +15,10 @@ struct FSparrowVelocity
 
 public:
 	UPROPERTY(BlueprintReadOnly)
-		float Speed = 0.f;
+		float Yaw = 0.f;
 
 	UPROPERTY(BlueprintReadOnly)
-		float Yaw = 0.f;
+		float Speed = 0.f;
 };
 
 USTRUCT(BlueprintType)
