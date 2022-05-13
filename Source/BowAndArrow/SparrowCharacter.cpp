@@ -3,9 +3,20 @@
 
 #include "SparrowCharacter.h"
 
+#include <Camera/CameraComponent.h>
+
+#include "CustomComponents/CustomSpringArmComponent.h"
+
 ASparrowCharacter::ASparrowCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	CameraBoom = CreateDefaultSubobject<UCustomSpringArmComponent>(TEXT("Camera Boom"));
+	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->SetupAttachment(RootComponent);
+
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(CameraBoom);
 }
 
 void ASparrowCharacter::BeginPlay()

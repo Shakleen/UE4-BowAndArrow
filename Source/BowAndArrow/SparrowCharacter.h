@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "SparrowCharacter.generated.h"
 
+class UCustomSpringArmComponent;
+class UCameraComponent;
+
 UCLASS(Abstract, Blueprintable)
 class BOWANDARROW_API ASparrowCharacter : public ACharacter
 {
@@ -27,4 +30,11 @@ private:
 	void MoveForwardOrBackward(float Value);
 	void MoveRightOrLeft(float Value);
 	void MoveCharacter(EAxis::Type Axis, float Value);
+
+private:
+	UPROPERTY(VisibleAnywhere, Category = Components)
+		UCustomSpringArmComponent* CameraBoom;
+
+	UPROPERTY(VisibleAnywhere, Category = Components)
+		UCameraComponent* Camera;
 };
