@@ -33,6 +33,7 @@ void USparrowAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 
 	HandleVelocityUpdate();
+	HandleAimOffsetUpdate();
 }
 
 void USparrowAnimInstance::HandleVelocityUpdate()
@@ -44,4 +45,17 @@ void USparrowAnimInstance::HandleVelocityUpdate()
 
 	const FTransform Transform{ Player->GetActorTransform() };
 	AnimState.Velocity.Yaw = Transform.InverseTransformVector(Velocity).Rotation().Yaw;
+}
+
+void USparrowAnimInstance::HandleAimOffsetUpdate()
+{
+	FRotator NewAimRotation = (Player->GetBaseAimRotation() - Player->GetActorRotation());
+	AnimState.Aim.Pitch = GetNewAimAngle(NewAimRotation.Pitch, AnimState.Aim.Pitch);
+	AnimState.Aim.Yaw = GetNewAimAngle(NewAimRotation.Yaw, AnimState.Aim.Yaw);
+}
+
+float USparrowAnimInstance::GetNewAimAngle(float Previous, float New) const
+{
+	float Current = FMath::FInterpTo(Previous, New, GetWorld()->GetDeltaSeconds(), AimOffsetUpdateSpeed);
+	return FMath::ClampAngle(Current, -90.f, 90.f);
 }

@@ -22,6 +22,19 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct FSparrowAim
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	UPROPERTY(BlueprintReadOnly)
+		float Pitch = 0.f;
+
+	UPROPERTY(BlueprintReadOnly)
+		float Yaw = 0.f;
+};
+
+USTRUCT(BlueprintType)
 struct FSparrowAnimState
 {
 	GENERATED_USTRUCT_BODY()
@@ -35,6 +48,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 		FSparrowVelocity Velocity;
+
+	UPROPERTY(BlueprintReadOnly)
+		FSparrowAim Aim;
 };
 
 UCLASS(Abstract, Blueprintable)
@@ -48,12 +64,17 @@ public:
 
 private:
 	void HandleVelocityUpdate();
+	void HandleAimOffsetUpdate();
+	float GetNewAimAngle(float Previous, float New) const;
 
 	void OnAimStateChange(bool bIsAiming);
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		FSparrowAnimState AnimState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Configuration", meta = (AllowPrivateAccess = "true"))
+		float AimOffsetUpdateSpeed = 10.f;
 
 	UPROPERTY()
 		ASparrowCharacter* Player;
