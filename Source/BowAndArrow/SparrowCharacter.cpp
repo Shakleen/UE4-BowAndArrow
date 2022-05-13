@@ -34,6 +34,7 @@ void ASparrowCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	BindMovementFunctions(PlayerInputComponent);
+	BindCameraFunctions(PlayerInputComponent);
 }
 
 #pragma region Movement function bindings
@@ -76,3 +77,21 @@ void ASparrowCharacter::MoveCharacter(EAxis::Type Axis, float Value)
 }
 
 #pragma endregion Movement function bindings
+
+#pragma region Camera function bindings
+
+void ASparrowCharacter::BindCameraFunctions(UInputComponent* PlayerInputComponent)
+{
+	PlayerInputComponent->BindAxis(
+		TEXT("Look Up / Down Mouse"),
+		this,
+		&ACharacter::AddControllerPitchInput
+	);
+	PlayerInputComponent->BindAxis(
+		TEXT("Turn Right / Left Mouse"),
+		this,
+		&ACharacter::AddControllerYawInput
+	);
+}
+
+#pragma endregion Camera function bindings

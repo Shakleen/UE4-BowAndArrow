@@ -31,6 +31,8 @@ private:
 	void MoveRightOrLeft(float Value);
 	void MoveCharacter(EAxis::Type Axis, float Value);
 
+	void BindCameraFunctions(UInputComponent* PlayerInputComponent);
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = Components)
 		UCustomSpringArmComponent* CameraBoom;
