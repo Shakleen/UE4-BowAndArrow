@@ -8,6 +8,9 @@
 
 class UCustomSpringArmComponent;
 class UCameraComponent;
+class UCharacterMovementComponent;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnAimStateChangeDelegate, bool bIsAiming);
 
 UCLASS(Abstract, Blueprintable)
 class BOWANDARROW_API ASparrowCharacter : public ACharacter
@@ -25,6 +28,9 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public:
+	FOnAimStateChangeDelegate OnAimStateChange;
+
 private:
 	void BindMovementFunctions(UInputComponent* PlayerInputComponent);
 	void MoveForwardOrBackward(float Value);
@@ -33,10 +39,24 @@ private:
 
 	void BindCameraFunctions(UInputComponent* PlayerInputComponent);
 
+	void BindAimingFunctions(UInputComponent* PlayerInputComponent);
+	void AimBow();
+	void LowerBow();
+	void SetAimMode(bool bIsAiming);
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = Components)
 		UCustomSpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, Category = Components)
 		UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere, Category = Configuration)
+		float MaxAimingSpeed = 150.f;
+
+	UPROPERTY(EditAnywhere, Category = Configuration)
+		float MaxNonAimingSpeed = 600.f;
+
+	UPROPERTY()
+		UCharacterMovementComponent* SparrowMovement;
 };

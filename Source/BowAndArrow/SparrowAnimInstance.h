@@ -31,6 +31,9 @@ public:
 		bool bIsMoving = false;
 
 	UPROPERTY(BlueprintReadOnly)
+		bool bIsAiming = false;
+
+	UPROPERTY(BlueprintReadOnly)
 		FSparrowVelocity Velocity;
 };
 
@@ -45,6 +48,8 @@ public:
 
 private:
 	void HandleVelocityUpdate();
+
+	void OnAimStateChange(bool bIsAiming);
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

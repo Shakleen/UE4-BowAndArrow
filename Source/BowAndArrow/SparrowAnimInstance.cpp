@@ -10,7 +10,18 @@ void USparrowAnimInstance::NativeInitializeAnimation()
 	Super::NativeInitializeAnimation();
 
 	Player = Cast<ASparrowCharacter>(TryGetPawnOwner());
+
+	if (Player)
+	{
+		Player->OnAimStateChange.AddUObject(this, &USparrowAnimInstance::OnAimStateChange);
+	}
 }
+
+void USparrowAnimInstance::OnAimStateChange(bool bIsAiming)
+{
+	AnimState.bIsAiming = bIsAiming;
+}
+
 
 void USparrowAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {

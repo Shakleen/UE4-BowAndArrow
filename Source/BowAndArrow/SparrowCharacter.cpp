@@ -4,6 +4,7 @@
 #include "SparrowCharacter.h"
 
 #include <Camera/CameraComponent.h>
+#include <GameFramework/CharacterMovementComponent.h>
 
 #include "CustomComponents/CustomSpringArmComponent.h"
 
@@ -22,6 +23,9 @@ ASparrowCharacter::ASparrowCharacter()
 void ASparrowCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SparrowMovement = GetCharacterMovement();
+	LowerBow();
 }
 
 void ASparrowCharacter::Tick(float DeltaTime)
@@ -35,6 +39,7 @@ void ASparrowCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	BindMovementFunctions(PlayerInputComponent);
 	BindCameraFunctions(PlayerInputComponent);
+	BindAimingFunctions(PlayerInputComponent);
 }
 
 #pragma region Movement function bindings
@@ -95,3 +100,42 @@ void ASparrowCharacter::BindCameraFunctions(UInputComponent* PlayerInputComponen
 }
 
 #pragma endregion Camera function bindings
+
+void ASparrowCharacter::BindAimingFunctions(UInputComponent* PlayerInputComponent)
+{
+	PlayerInputComponent->BindAction(
+		TEXT("Aim"),
+		EInputEvent::IE_Pressed,
+		this,
+		&ASparrowCharacter::AimBow
+	);
+	PlayerInputComponent->BindAction(
+		TEXT("Aim"),
+		EInputEvent::IE_Released,
+		this,
+		&ASparrowCharacter::LowerBow
+	);
+}
+
+void ASparrowCharacter::AimBow()
+{
+	SetAimMode(true);
+}
+
+void ASparrowCharacter::LowerBow()
+{
+	SetAimMode(false);
+}
+
+void ASparrowCharacter::SetAimMode(bool bIsAiming)
+{
+	if (!SparrowMovement)
+	{
+		return;
+	}
+
+	SparrowMovement->MaxWalkSpeed = bIsAiming ? MaxAimingSpeed : MaxNonAimingSpeed;
+	SparrowMovement->bOrientRotationToMovement = !bIsAiming;
+	bUseControllerRotationYaw = bIsAiming;
+	OnAimStateChange.Broadcast(bIsAiming);
+}
