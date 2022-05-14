@@ -13,12 +13,25 @@ AArrow::AArrow()
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Arrow Mesh"));
 	StaticMesh->SetSimulatePhysics(true);
+	StaticMesh->SetGenerateOverlapEvents(false);
+	StaticMesh->SetGenerateOverlapEvents(true);
 	SetRootComponent(StaticMesh);
 }
 
 void AArrow::BeginPlay()
 {
 	Super::BeginPlay();
+
+	StaticMesh->OnComponentHit.AddDynamic(this, &AArrow::OnComponentHit);
+}
+
+void AArrow::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *OtherActor->GetName());
+
+	StaticMesh->SetSimulatePhysics(false);
+	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Destroy();
 }
 
 void AArrow::Tick(float DeltaTime)

@@ -32,11 +32,6 @@ void ASparrowCharacter::BeginPlay()
 void ASparrowCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	FVector MuzzleLocation;
-	FRotator MuzzleRotation;
-	GetMesh()->GetSocketWorldLocationAndRotation(TEXT("arrow_anchor"), MuzzleLocation, MuzzleRotation);
-	UE_LOG(LogTemp, Warning, TEXT("Location: %s Rotation: %s"), *MuzzleLocation.ToString(), *MuzzleRotation.ToString());
 }
 
 void ASparrowCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

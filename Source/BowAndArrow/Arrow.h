@@ -25,6 +25,10 @@ public:
 	void Launch(const FTransform& MuzzleTransform);
 
 private:
+	UFUNCTION()
+		void OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+private:
 	UPROPERTY(VisibleAnywhere, Category = Components)
 		UStaticMeshComponent* StaticMesh;
 
