@@ -7,10 +7,11 @@
 #include <GameFramework/CharacterMovementComponent.h>
 
 #include "CustomComponents/CustomSpringArmComponent.h"
+#include "Arrow.h"
 
 ASparrowCharacter::ASparrowCharacter()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	CameraBoom = CreateDefaultSubobject<UCustomSpringArmComponent>(TEXT("Camera Boom"));
 	CameraBoom->bUsePawnControlRotation = true;
@@ -31,6 +32,11 @@ void ASparrowCharacter::BeginPlay()
 void ASparrowCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	FVector MuzzleLocation;
+	FRotator MuzzleRotation;
+	GetMesh()->GetSocketWorldLocationAndRotation(TEXT("arrow_anchor"), MuzzleLocation, MuzzleRotation);
+	UE_LOG(LogTemp, Warning, TEXT("Location: %s Rotation: %s"), *MuzzleLocation.ToString(), *MuzzleRotation.ToString());
 }
 
 void ASparrowCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -171,6 +177,24 @@ void ASparrowCharacter::FireArrow()
 	}
 	
 	PlayAnimMontage(FireMontage);
+	SpawnArrow();
+}
+
+void ASparrowCharacter::SpawnArrow()
+{
+	if (!ArrowClass)
+	{
+		return;
+	}
+
+	AArrow* Arrow = GetWorld()->SpawnActor<AArrow>(ArrowClass);
+
+	if (Arrow)
+	{
+		FTransform MuzzleTransform = GetMesh()->GetSocketTransform(TEXT("BowEmitterSocket"));
+		Arrow->SetActorTransform(MuzzleTransform);
+		Arrow->Launch(MuzzleTransform);
+	}
 }
 
 #pragma endregion Firing function bindings

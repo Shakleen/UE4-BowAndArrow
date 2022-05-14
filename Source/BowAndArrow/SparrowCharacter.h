@@ -9,6 +9,7 @@
 class UCustomSpringArmComponent;
 class UCameraComponent;
 class UCharacterMovementComponent;
+class AArrow;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnAimStateChangeDelegate, bool bIsAiming);
 
@@ -57,6 +58,8 @@ private:
 	void BindFiringFunctions(UInputComponent* PlayerInputComponent);
 	void FireArrow();
 
+	void SpawnArrow();
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = Components)
 		UCustomSpringArmComponent* CameraBoom;
@@ -64,17 +67,20 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Components)
 		UCameraComponent* Camera;
 
-	UPROPERTY(EditAnywhere, Category = Configuration)
+	UPROPERTY(EditAnywhere, Category = Configurations)
 		float MaxAimingSpeed = 150.f;
 
-	UPROPERTY(EditAnywhere, Category = Configuration)
+	UPROPERTY(EditAnywhere, Category = Configurations)
 		float MaxNonAimingSpeed = 600.f;
 
-	UPROPERTY(EditAnywhere, Category = Configuration)
+	UPROPERTY(EditAnywhere, Category = Configurations)
 		UAnimMontage* FireMontage;
 
 	UPROPERTY(VisibleAnywhere, Category = State)
 		FSparrowState State;
+
+	UPROPERTY(EditAnywhere, Category = Configurations)
+		TSubclassOf<AArrow> ArrowClass;
 
 	UPROPERTY()
 		UCharacterMovementComponent* SparrowMovement;
