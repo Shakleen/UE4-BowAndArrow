@@ -68,6 +68,7 @@ private:
 	float GetNewAimAngle(float Previous, float New) const;
 
 	void OnAimStateChange(bool bIsAiming);
+	void OnFireArrow();
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

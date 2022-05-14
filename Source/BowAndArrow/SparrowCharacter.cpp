@@ -40,11 +40,12 @@ void ASparrowCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	BindMovementFunctions(PlayerInputComponent);
 	BindCameraFunctions(PlayerInputComponent);
 	BindAimingFunctions(PlayerInputComponent);
+	BindFiringFunctions(PlayerInputComponent);
 }
 
 #pragma region Movement function bindings
 
-void ASparrowCharacter::BindMovementFunctions(UInputComponent* PlayerInputComponent)
+inline void ASparrowCharacter::BindMovementFunctions(UInputComponent* PlayerInputComponent)
 {
 	PlayerInputComponent->BindAxis(
 		TEXT("Move Forward / Backward"),
@@ -85,7 +86,7 @@ void ASparrowCharacter::MoveCharacter(EAxis::Type Axis, float Value)
 
 #pragma region Camera function bindings
 
-void ASparrowCharacter::BindCameraFunctions(UInputComponent* PlayerInputComponent)
+inline void ASparrowCharacter::BindCameraFunctions(UInputComponent* PlayerInputComponent)
 {
 	PlayerInputComponent->BindAxis(
 		TEXT("Look Up / Down Mouse"),
@@ -101,7 +102,9 @@ void ASparrowCharacter::BindCameraFunctions(UInputComponent* PlayerInputComponen
 
 #pragma endregion Camera function bindings
 
-void ASparrowCharacter::BindAimingFunctions(UInputComponent* PlayerInputComponent)
+#pragma region Aiming function bindings
+
+inline void ASparrowCharacter::BindAimingFunctions(UInputComponent* PlayerInputComponent)
 {
 	PlayerInputComponent->BindAction(
 		TEXT("Aim"),
@@ -127,15 +130,47 @@ void ASparrowCharacter::LowerBow()
 	SetAimMode(false);
 }
 
-void ASparrowCharacter::SetAimMode(bool bIsAiming)
+inline void ASparrowCharacter::SetAimMode(bool bIsAiming)
 {
 	if (!SparrowMovement)
 	{
 		return;
 	}
 
+	State.bIsAiming = bIsAiming;
 	SparrowMovement->MaxWalkSpeed = bIsAiming ? MaxAimingSpeed : MaxNonAimingSpeed;
 	SparrowMovement->bOrientRotationToMovement = !bIsAiming;
 	bUseControllerRotationYaw = bIsAiming;
 	OnAimStateChange.Broadcast(bIsAiming);
 }
+
+#pragma endregion Aiming function bindings
+
+#pragma region Firing function bindings
+
+inline void ASparrowCharacter::BindFiringFunctions(UInputComponent* PlayerInputComponent)
+{
+	PlayerInputComponent->BindAction(
+		TEXT("Fire"),
+		EInputEvent::IE_Pressed,
+		this,
+		&ASparrowCharacter::FireArrow
+	);
+}
+
+void ASparrowCharacter::FireArrow()
+{
+	if (!State.bIsAiming || !FireMontage)
+	{
+		return;
+	}
+
+	if (GetMesh()->GetAnimInstance()->Montage_IsPlaying(FireMontage))
+	{
+		return;
+	}
+	
+	PlayAnimMontage(FireMontage);
+}
+
+#pragma endregion Firing function bindings

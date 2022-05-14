@@ -12,6 +12,16 @@ class UCharacterMovementComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnAimStateChangeDelegate, bool bIsAiming);
 
+USTRUCT(BlueprintType)
+struct FSparrowState
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool bIsAiming = false;
+};
+
 UCLASS(Abstract, Blueprintable)
 class BOWANDARROW_API ASparrowCharacter : public ACharacter
 {
@@ -44,6 +54,9 @@ private:
 	void LowerBow();
 	void SetAimMode(bool bIsAiming);
 
+	void BindFiringFunctions(UInputComponent* PlayerInputComponent);
+	void FireArrow();
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = Components)
 		UCustomSpringArmComponent* CameraBoom;
@@ -56,6 +69,12 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Configuration)
 		float MaxNonAimingSpeed = 600.f;
+
+	UPROPERTY(EditAnywhere, Category = Configuration)
+		UAnimMontage* FireMontage;
+
+	UPROPERTY(VisibleAnywhere, Category = State)
+		FSparrowState State;
 
 	UPROPERTY()
 		UCharacterMovementComponent* SparrowMovement;
