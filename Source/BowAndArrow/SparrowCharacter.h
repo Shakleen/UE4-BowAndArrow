@@ -10,6 +10,7 @@ class UCustomSpringArmComponent;
 class UCameraComponent;
 class UCharacterMovementComponent;
 class AArrow;
+class UHealthComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnAimStateChangeDelegate, bool bIsAiming);
 
@@ -66,6 +67,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = Components)
 		UCameraComponent* Camera;
+
+	UPROPERTY(VisibleAnywhere, Category = Components)
+		UHealthComponent* Health;
 
 	UPROPERTY(EditAnywhere, Category = Configurations)
 		float MaxAimingSpeed = 150.f;

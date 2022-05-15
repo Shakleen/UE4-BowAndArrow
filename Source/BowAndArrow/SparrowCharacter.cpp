@@ -7,6 +7,7 @@
 #include <GameFramework/CharacterMovementComponent.h>
 
 #include "CustomComponents/CustomSpringArmComponent.h"
+#include "CustomComponents/HealthComponent.h"
 #include "Arrow.h"
 
 ASparrowCharacter::ASparrowCharacter()
@@ -19,6 +20,9 @@ ASparrowCharacter::ASparrowCharacter()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
+
+	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
+	AddOwnedComponent(Health);
 }
 
 void ASparrowCharacter::BeginPlay()
