@@ -52,6 +52,12 @@ float ASparrowCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEven
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	float AppliedDamage = Health->TakeDamage(Damage);
+	
+	if (Health->IsEmpty())
+	{
+		OnDeath.Broadcast();
+	}
+
 	return AppliedDamage;
 }
 

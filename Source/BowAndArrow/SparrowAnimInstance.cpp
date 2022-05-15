@@ -14,12 +14,18 @@ void USparrowAnimInstance::NativeInitializeAnimation()
 	if (Player)
 	{
 		Player->OnAimStateChange.AddUObject(this, &USparrowAnimInstance::OnAimStateChange);
+		Player->OnDeath.AddUObject(this, &USparrowAnimInstance::OnDeath);
 	}
 }
 
 void USparrowAnimInstance::OnAimStateChange(bool bIsAiming)
 {
 	AnimState.bIsAiming = bIsAiming;
+}
+
+void USparrowAnimInstance::OnDeath()
+{
+	AnimState.bIsDead = true;
 }
 
 

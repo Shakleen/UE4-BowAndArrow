@@ -27,8 +27,10 @@ void ASparrowEnemyCharacter::BeginPlay()
 
 void ASparrowEnemyCharacter::OnHealthUpdate(float MaxHealth, float CurrentHealth)
 {
-	if (HealthBar)
+	if (!HealthBar)
 	{
-		HealthBar->UpdateHealthBar(MaxHealth, CurrentHealth);
+		return;
 	}
+
+	HealthBar->UpdateHealthBar(MaxHealth, CurrentHealth);
 }

@@ -13,6 +13,7 @@ class AArrow;
 class UHealthComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnAimStateChangeDelegate, bool bIsAiming);
+DECLARE_MULTICAST_DELEGATE(FOnDeathDelegate);
 
 USTRUCT(BlueprintType)
 struct FSparrowState
@@ -42,6 +43,7 @@ public:
 
 public:
 	FOnAimStateChangeDelegate OnAimStateChange;
+	FOnDeathDelegate OnDeath;
 
 private:
 	void BindMovementFunctions(UInputComponent* PlayerInputComponent);
