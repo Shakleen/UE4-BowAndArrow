@@ -48,13 +48,31 @@ uint32 UHealthComponent::GetMaxHealth() const
 	return MaxHealth;
 }
 
-void UHealthComponent::TakeDamage(uint32 Amount)
+uint32 UHealthComponent::TakeDamage(uint32 Amount)
 {
+	if (IsEmpty())
+	{
+		return 0;
+	}
+
+	uint32 PreviousHealth = CurrentHealth;
 	SetCurrentHealth(CurrentHealth - Amount);
+	uint32 AppliedDamage = PreviousHealth - CurrentHealth;
+	UE_LOG(
+		LogTemp,
+		Warning,
+		TEXT("%s Damaged by %d amount from %d passed in. Previous Health: %d, CurrentHealth: %d"),
+		*GetOwner()->GetName(),
+		AppliedDamage,
+		Amount,
+		PreviousHealth,
+		CurrentHealth
+	)
+	return AppliedDamage;
 }
 
 void UHealthComponent::SetCurrentHealth(uint32 NewValue)
 {
-	CurrentHealth = FMath::Clamp(uint32(0), MaxHealth, NewValue);
+	CurrentHealth = FMath::Clamp(NewValue, uint32(0), MaxHealth);
 }
 

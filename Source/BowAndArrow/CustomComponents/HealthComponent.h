@@ -19,7 +19,7 @@ public:
 	bool IsFull() const;
 	uint32 GetCurrentHealth() const;
 	uint32 GetMaxHealth() const;
-	void TakeDamage(uint32 Amount);
+	uint32 TakeDamage(uint32 Amount);
 	void SetCurrentHealth(uint32 NewValue);
 
 private:

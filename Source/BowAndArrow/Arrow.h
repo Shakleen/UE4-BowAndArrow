@@ -34,4 +34,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Configuration)
 		float LaunchStrength = 1000;
+
+	UPROPERTY(EditAnywhere, Category = Configuration)
+		uint32 DamageAmount = 25;
 };

@@ -6,6 +6,8 @@
 #include <Components/SphereComponent.h>
 #include <GameFramework/ProjectileMovementComponent.h>
 #include <Kismet/KismetMathLibrary.h>
+#include <Kismet/GameplayStatics.h>
+#include <GameFramework/Character.h>
 
 AArrow::AArrow()
 {
@@ -27,7 +29,15 @@ void AArrow::BeginPlay()
 
 void AArrow::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *OtherActor->GetName());
+	if (Cast<ACharacter>(OtherActor))
+	{
+		OtherActor->TakeDamage(
+			DamageAmount,
+			FDamageEvent(),
+			UGameplayStatics::GetPlayerController(GetWorld(), 0),
+			UGameplayStatics::GetPlayerPawn(GetWorld(), 0)
+		);
+	}
 
 	StaticMesh->SetSimulatePhysics(false);
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);

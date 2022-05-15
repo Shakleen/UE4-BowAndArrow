@@ -48,6 +48,13 @@ void ASparrowCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	BindFiringFunctions(PlayerInputComponent);
 }
 
+float ASparrowCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	float AppliedDamage = Health->TakeDamage(Damage);
+	return AppliedDamage;
+}
+
 #pragma region Movement function bindings
 
 inline void ASparrowCharacter::BindMovementFunctions(UInputComponent* PlayerInputComponent)
