@@ -74,5 +74,6 @@ uint32 UHealthComponent::TakeDamage(uint32 Amount)
 void UHealthComponent::SetCurrentHealth(uint32 NewValue)
 {
 	CurrentHealth = FMath::Clamp(NewValue, uint32(0), MaxHealth);
+	OnHealthUpdate.Broadcast(MaxHealth, CurrentHealth);
 }
 

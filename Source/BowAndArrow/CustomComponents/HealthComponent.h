@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdateDelegate, float MaxHealth, float CurrentHealth);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BOWANDARROW_API UHealthComponent : public UActorComponent
@@ -21,6 +22,9 @@ public:
 	uint32 GetMaxHealth() const;
 	uint32 TakeDamage(uint32 Amount);
 	void SetCurrentHealth(uint32 NewValue);
+
+public:
+	FOnHealthUpdateDelegate OnHealthUpdate;
 
 private:
 	virtual void PostInitProperties() override;

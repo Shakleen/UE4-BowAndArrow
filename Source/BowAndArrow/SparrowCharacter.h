@@ -61,7 +61,7 @@ private:
 
 	void SpawnArrow();
 
-private:
+protected:
 	UPROPERTY(VisibleAnywhere, Category = Components)
 		UCustomSpringArmComponent* CameraBoom;
 
