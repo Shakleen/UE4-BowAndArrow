@@ -23,11 +23,15 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	void SetupProjectileParams();
 	void SetStartLocationAndLaunchVelocity();
 	FVector CalculateLaunchVelocity(const FTransform& SocketTransform);
 	void UpdateWorldLocation();
 
 private:
+	UPROPERTY(EditAnywhere, Category = Configuration)
+		bool bDebug = false;
+
 	UPROPERTY(EditAnywhere, Category = Configuration)
 		float Speed = 1000.f;
 

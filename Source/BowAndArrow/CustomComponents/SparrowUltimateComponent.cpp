@@ -13,18 +13,30 @@ void USparrowUltimateComponent::BeginPlay()
 
 	SetVisibility(false);
 	SetCollisionProfileName(TEXT("NoCollision"));
-
 	Sparrow = Cast<ASparrowCharacter>(GetOwner());
+	SetupProjectileParams();
+	Direction = MinRange;
+}
+
+void USparrowUltimateComponent::SetupProjectileParams()
+{
+	if (bDebug)
+	{
+		Params.DrawDebugType = EDrawDebugTrace::ForDuration;
+	}
+	else
+	{
+		Params.DrawDebugType = EDrawDebugTrace::None;
+	}
 
 	Params.bTraceWithCollision = true;
-	Params.SimFrequency = 12.f;
+	Params.SimFrequency = 4.f;
 	Params.MaxSimTime = 10.f;
 	Params.DrawDebugTime = 0.f;
 	Params.OverrideGravityZ = 0.f;
 	Params.ObjectTypes = TArray<TEnumAsByte<EObjectTypeQuery>>();
 	Params.ObjectTypes.Add(EObjectTypeQuery::ObjectTypeQuery1);
 	Params.ActorsToIgnore = TArray<AActor*>({ Sparrow });
-	Params.DrawDebugType = EDrawDebugTrace::ForDuration;
 }
 
 void USparrowUltimateComponent::AimUltimate(float DeltaTime)
