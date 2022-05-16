@@ -47,9 +47,6 @@ public:
 		bool bIsAiming = false;
 
 	UPROPERTY(BlueprintReadOnly)
-		bool bIsDead = false;
-
-	UPROPERTY(BlueprintReadOnly)
 		FSparrowVelocity Velocity;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -71,7 +68,6 @@ private:
 	float GetNewAimAngle(float Previous, float New) const;
 
 	void OnAimStateChange(bool bIsAiming);
-	void OnDeath();
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

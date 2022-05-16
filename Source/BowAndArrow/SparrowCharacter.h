@@ -11,9 +11,9 @@ class UCameraComponent;
 class UCharacterMovementComponent;
 class AArrow;
 class UHealthComponent;
+class USparrowUltimateComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnAimStateChangeDelegate, bool bIsAiming);
-DECLARE_MULTICAST_DELEGATE(FOnDeathDelegate);
 
 USTRUCT(BlueprintType)
 struct FSparrowState
@@ -22,7 +22,10 @@ struct FSparrowState
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		bool bIsAiming = false;
+		bool bIsAimingBow = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool bIsAimingUltimate = false;
 };
 
 UCLASS(Abstract, Blueprintable)
@@ -40,10 +43,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-
+	
 public:
 	FOnAimStateChangeDelegate OnAimStateChange;
-	FOnDeathDelegate OnDeath;
 
 private:
 	void BindMovementFunctions(UInputComponent* PlayerInputComponent);
@@ -61,10 +63,17 @@ private:
 	void BindFiringFunctions(UInputComponent* PlayerInputComponent);
 	void FireArrow();
 
+	void BindUltimateFunctions(UInputComponent* PlayerInputComponent);
+	void AimUltimate();
+	void ReleaseUltimate();
+	void SetUltimateRange(float AxisValue);
+
 	void SpawnArrow();
 
+	void SetControlRotationStatus(bool bIsAiming);
+
 protected:
-	UPROPERTY(VisibleAnywhere, Category = Components)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Components, meta = (AllowPrivateAccess = "true"))
 		UCustomSpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, Category = Components)
@@ -73,11 +82,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = Components)
 		UHealthComponent* Health;
 
+	UPROPERTY(VisibleAnywhere, Category = Components)
+		USparrowUltimateComponent* Ultimate;
+
 	UPROPERTY(EditAnywhere, Category = Configurations)
 		float MaxAimingSpeed = 150.f;
 
 	UPROPERTY(EditAnywhere, Category = Configurations)
 		float MaxNonAimingSpeed = 600.f;
+	
+	UPROPERTY(EditAnywhere, Category = Configurations)
+		float UltimateRange = 5000.f;
 
 	UPROPERTY(EditAnywhere, Category = Configurations)
 		UAnimMontage* FireMontage;

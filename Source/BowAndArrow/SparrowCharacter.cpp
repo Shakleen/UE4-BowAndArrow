@@ -5,9 +5,13 @@
 
 #include <Camera/CameraComponent.h>
 #include <GameFramework/CharacterMovementComponent.h>
+#include <Components/CapsuleComponent.h>
+#include <Kismet/GameplayStatics.h>
+#include <DrawDebugHelpers.h>
 
 #include "CustomComponents/CustomSpringArmComponent.h"
 #include "CustomComponents/HealthComponent.h"
+#include "CustomComponents/SparrowUltimateComponent.h"
 #include "Arrow.h"
 
 ASparrowCharacter::ASparrowCharacter()
@@ -23,6 +27,9 @@ ASparrowCharacter::ASparrowCharacter()
 
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 	AddOwnedComponent(Health);
+
+	Ultimate = CreateDefaultSubobject<USparrowUltimateComponent>(TEXT("Ultimate"));
+	Ultimate->SetupAttachment(RootComponent);
 }
 
 void ASparrowCharacter::BeginPlay()
@@ -36,6 +43,11 @@ void ASparrowCharacter::BeginPlay()
 void ASparrowCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (State.bIsAimingUltimate)
+	{
+		Ultimate->AimUltimate(DeltaTime);
+	}
 }
 
 void ASparrowCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -46,18 +58,13 @@ void ASparrowCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	BindCameraFunctions(PlayerInputComponent);
 	BindAimingFunctions(PlayerInputComponent);
 	BindFiringFunctions(PlayerInputComponent);
+	BindUltimateFunctions(PlayerInputComponent);
 }
 
 float ASparrowCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	float AppliedDamage = Health->TakeDamage(Damage);
-	
-	if (Health->IsEmpty())
-	{
-		OnDeath.Broadcast();
-	}
-
 	return AppliedDamage;
 }
 
@@ -155,10 +162,9 @@ inline void ASparrowCharacter::SetAimMode(bool bIsAiming)
 		return;
 	}
 
-	State.bIsAiming = bIsAiming;
+	State.bIsAimingBow = bIsAiming;
 	SparrowMovement->MaxWalkSpeed = bIsAiming ? MaxAimingSpeed : MaxNonAimingSpeed;
-	SparrowMovement->bOrientRotationToMovement = !bIsAiming;
-	bUseControllerRotationYaw = bIsAiming;
+	SetControlRotationStatus(bIsAiming);
 	OnAimStateChange.Broadcast(bIsAiming);
 }
 
@@ -178,7 +184,7 @@ inline void ASparrowCharacter::BindFiringFunctions(UInputComponent* PlayerInputC
 
 void ASparrowCharacter::FireArrow()
 {
-	if (!State.bIsAiming || !FireMontage)
+	if (!State.bIsAimingBow || !FireMontage)
 	{
 		return;
 	}
@@ -210,3 +216,53 @@ void ASparrowCharacter::SpawnArrow()
 }
 
 #pragma endregion Firing function bindings
+
+void ASparrowCharacter::BindUltimateFunctions(UInputComponent* PlayerInputComponent)
+{
+	PlayerInputComponent->BindAction(
+		TEXT("Ultimate"),
+		EInputEvent::IE_Pressed,
+		this,
+		&ASparrowCharacter::AimUltimate
+	);
+	PlayerInputComponent->BindAction(
+		TEXT("Ultimate"),
+		EInputEvent::IE_Released,
+		this,
+		&ASparrowCharacter::ReleaseUltimate
+	);
+
+	PlayerInputComponent->BindAxis(
+		TEXT("Control Ultimate Range"),
+		this,
+		&ASparrowCharacter::SetUltimateRange
+	);
+}
+
+void ASparrowCharacter::AimUltimate()
+{
+	State.bIsAimingUltimate = true;
+	Ultimate->SetVisibility(true, true);
+	SetControlRotationStatus(true);
+}
+
+void ASparrowCharacter::ReleaseUltimate()
+{
+	State.bIsAimingUltimate = false;
+	Ultimate->SetVisibility(false, true);
+	SetControlRotationStatus(false);
+}
+
+void ASparrowCharacter::SetUltimateRange(float AxisValue)
+{
+	if (State.bIsAimingUltimate && Ultimate)
+	{
+		Ultimate->SetDirection(AxisValue);
+	}
+}
+
+void ASparrowCharacter::SetControlRotationStatus(bool bIsAiming)
+{
+	SparrowMovement->bOrientRotationToMovement = !bIsAiming;
+	bUseControllerRotationYaw = bIsAiming;
+}
