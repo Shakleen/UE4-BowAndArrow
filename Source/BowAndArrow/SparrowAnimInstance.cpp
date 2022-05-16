@@ -35,6 +35,16 @@ void USparrowAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	HandleAimOffsetUpdate();
 }
 
+void USparrowAnimInstance::PauseAnimation()
+{
+	if (!Player)
+	{
+		return;
+	}
+
+	Player->ToggleAnimation(false);
+}
+
 void USparrowAnimInstance::HandleVelocityUpdate()
 {
 	const FVector Velocity = Player->GetVelocity();

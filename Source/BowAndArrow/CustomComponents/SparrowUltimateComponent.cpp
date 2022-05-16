@@ -41,7 +41,7 @@ void USparrowUltimateComponent::AimUltimate(float DeltaTime)
 
 void USparrowUltimateComponent::SetStartLocationAndLaunchVelocity()
 {
-	FTransform SocketTransform = Sparrow->GetMesh()->GetSocketTransform(TEXT("Ultimate Socket"));
+	FTransform SocketTransform = Sparrow->GetMesh()->GetSocketTransform(TEXT("BowEmitterSocket"));
 	Params.StartLocation = SocketTransform.GetLocation();
 	Params.LaunchVelocity = CalculateLaunchVelocity(SocketTransform);
 }

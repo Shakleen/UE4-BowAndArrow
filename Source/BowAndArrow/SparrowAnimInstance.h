@@ -62,12 +62,16 @@ public:
 	virtual void NativeInitializeAnimation();
 	virtual void NativeUpdateAnimation(float DeltaSeconds);
 
+	UFUNCTION(BlueprintCallable)
+		void PauseAnimation();
+
 private:
 	void HandleVelocityUpdate();
 	void HandleAimOffsetUpdate();
 	float GetNewAimAngle(float Previous, float New) const;
 
 	void OnAimStateChange(bool bIsAiming);
+
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
