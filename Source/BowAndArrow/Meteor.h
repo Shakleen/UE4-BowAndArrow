@@ -7,7 +7,8 @@
 #include "Meteor.generated.h"
 
 class UStaticMeshComponent;
-class USphereComponent;
+class UParticleSystem;
+class UParticleSystemComponent;
 
 UCLASS(Abstract, Blueprintable)
 class BOWANDARROW_API AMeteor : public AActor
@@ -24,9 +25,25 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
+	UFUNCTION()
+		void OnMeteorHit(
+			UPrimitiveComponent* HitComponent,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			FVector NormalImpulse,
+			const FHitResult& Hit
+		);
+
+private:
 	UPROPERTY(VisibleAnywhere, Category = Components)
 		UStaticMeshComponent* MeteorMesh;
 
-	UPROPERTY(VisibleAnywhere, Category = Components)
-		USphereComponent* MeteorCollision;
+	UPROPERTY(EditAnywhere, Category = Components)
+		UParticleSystemComponent* MeteorTrailParticle;
+
+	UPROPERTY(EditAnywhere, Category = Configurations)
+		UParticleSystem* ExplosionParticles;
+
+	UPROPERTY(EditAnywhere, Category = Configurations)
+		FVector ExplosionScale = FVector(1.f);
 };

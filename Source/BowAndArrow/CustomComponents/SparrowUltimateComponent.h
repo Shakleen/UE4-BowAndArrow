@@ -29,6 +29,7 @@ private:
 	void SetStartLocationAndLaunchVelocity();
 	FVector CalculateLaunchVelocity(const FTransform& SocketTransform);
 	void UpdateWorldLocation();
+	FVector GetMeteorSpawnLocation() const;
 
 private:
 	UPROPERTY(EditAnywhere, Category = Configuration)

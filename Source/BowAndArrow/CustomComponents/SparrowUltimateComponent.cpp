@@ -102,12 +102,17 @@ void USparrowUltimateComponent::DropMeteor()
 		return;
 	}
 
-	const FVector SpawnLocation = Sparrow->GetActorLocation() + FVector(0.f, 0.f, MeteorSpawnHeight);
-	const FVector HitLocation = Result.LastTraceDestination.Location;
 	AMeteor* Meteor = GetWorld()->SpawnActor<AMeteor>(MeteorClass);
 
 	if (Meteor)
 	{
-		Meteor->SetActorLocation(SpawnLocation);
+		Meteor->SetActorLocation(GetMeteorSpawnLocation());
 	}
+}
+
+FVector USparrowUltimateComponent::GetMeteorSpawnLocation() const
+{
+	FVector HitLocation = Result.LastTraceDestination.Location;
+	FVector SpawnLocation = HitLocation + FVector(0.f, 0.f, MeteorSpawnHeight);
+	return SpawnLocation;
 }
