@@ -54,7 +54,7 @@ void AMeteor::OnMeteorHit(
 		FRotator::ZeroRotator,
 		ExplosionScale
 	);
-
+	OnImpact.Broadcast();
 	Destroy();
 }
 

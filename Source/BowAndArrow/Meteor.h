@@ -10,6 +10,8 @@ class UStaticMeshComponent;
 class UParticleSystem;
 class UParticleSystemComponent;
 
+DECLARE_MULTICAST_DELEGATE(FOnImpactDelegate);
+
 UCLASS(Abstract, Blueprintable)
 class BOWANDARROW_API AMeteor : public AActor
 {
@@ -33,6 +35,9 @@ private:
 			FVector NormalImpulse,
 			const FHitResult& Hit
 		);
+
+public:
+	FOnImpactDelegate OnImpact;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = Components)

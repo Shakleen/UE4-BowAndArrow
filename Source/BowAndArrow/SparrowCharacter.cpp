@@ -274,7 +274,6 @@ void ASparrowCharacter::AimUltimate()
 void ASparrowCharacter::ReleaseUltimate()
 {
 	State.bIsAimingUltimate = false;
-	Ultimate->SetVisibility(false, true);
 	Ultimate->DropMeteor();
 	SetControlRotationStatus(false);
 	ToggleAnimation(true);

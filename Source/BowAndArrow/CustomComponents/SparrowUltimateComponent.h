@@ -30,6 +30,8 @@ private:
 	FVector CalculateLaunchVelocity(const FTransform& SocketTransform);
 	void UpdateWorldLocation();
 	FVector GetMeteorSpawnLocation() const;
+	void OnMeteorImpact();
+	void Hide();
 
 private:
 	UPROPERTY(EditAnywhere, Category = Configuration)
@@ -54,13 +56,19 @@ private:
 		float MeteorSpawnHeight = 1000.f;
 
 	UPROPERTY(EditAnywhere, Category = Configuration)
-		TSubclassOf<AMeteor> MeteorClass;
+		float AimHideDelay = 0.5f;
 
-	UPROPERTY(VisibleAnywhere, Transient, Category = Configuration)
-		float Direction = 0.f;
+	UPROPERTY(EditAnywhere, Category = Configuration)
+		TSubclassOf<AMeteor> MeteorClass;
 
 	UPROPERTY(EditAnywhere, Category = Configuration)
 		float LocationChangeInterpSpeed = 5.f;
+
+	UPROPERTY(EditAnywhere, Category = Configuration)
+		float DamageAmount = 75.f;
+
+	UPROPERTY(VisibleAnywhere, Transient, Category = Configuration)
+		float Direction = 0.f;
 
 	ASparrowCharacter* Sparrow;
 	FPredictProjectilePathParams Params;

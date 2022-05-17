@@ -55,19 +55,8 @@ uint32 UHealthComponent::TakeDamage(uint32 Amount)
 		return 0;
 	}
 
-	uint32 PreviousHealth = CurrentHealth;
-	SetCurrentHealth(CurrentHealth - Amount);
-	uint32 AppliedDamage = PreviousHealth - CurrentHealth;
-	UE_LOG(
-		LogTemp,
-		Warning,
-		TEXT("%s Damaged by %d amount from %d passed in. Previous Health: %d, CurrentHealth: %d"),
-		*GetOwner()->GetName(),
-		AppliedDamage,
-		Amount,
-		PreviousHealth,
-		CurrentHealth
-	)
+	uint32 AppliedDamage = FMath::Min(CurrentHealth, Amount);
+	SetCurrentHealth(CurrentHealth - AppliedDamage);
 	return AppliedDamage;
 }
 

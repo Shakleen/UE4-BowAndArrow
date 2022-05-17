@@ -13,7 +13,8 @@ void USparrowUltimateComponent::BeginPlay()
 	Super::BeginPlay();
 
 	SetVisibility(false);
-	SetCollisionProfileName(TEXT("NoCollision"));
+	SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+	SetGenerateOverlapEvents(true);
 	Sparrow = Cast<ASparrowCharacter>(GetOwner());
 	SetupProjectileParams();
 	Direction = MinRange;
@@ -21,15 +22,7 @@ void USparrowUltimateComponent::BeginPlay()
 
 void USparrowUltimateComponent::SetupProjectileParams()
 {
-	if (bDebug)
-	{
-		Params.DrawDebugType = EDrawDebugTrace::ForDuration;
-	}
-	else
-	{
-		Params.DrawDebugType = EDrawDebugTrace::None;
-	}
-
+	Params.DrawDebugType = bDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None;
 	Params.bTraceWithCollision = true;
 	Params.SimFrequency = 4.f;
 	Params.MaxSimTime = 10.f;
@@ -107,6 +100,7 @@ void USparrowUltimateComponent::DropMeteor()
 	if (Meteor)
 	{
 		Meteor->SetActorLocation(GetMeteorSpawnLocation());
+		Meteor->OnImpact.AddUObject(this, &USparrowUltimateComponent::OnMeteorImpact);
 	}
 }
 
@@ -115,4 +109,35 @@ FVector USparrowUltimateComponent::GetMeteorSpawnLocation() const
 	FVector HitLocation = Result.LastTraceDestination.Location;
 	FVector SpawnLocation = HitLocation + FVector(0.f, 0.f, MeteorSpawnHeight);
 	return SpawnLocation;
+}
+
+void USparrowUltimateComponent::OnMeteorImpact()
+{
+	FTimerHandle HideTimer;
+
+	Sparrow->GetWorldTimerManager().SetTimer(
+		HideTimer,
+		this,
+		&USparrowUltimateComponent::Hide,
+		AimHideDelay
+	);
+
+	TSet<AActor*> OverlappingActors;
+	GetOverlappingActors(OverlappingActors, TSubclassOf<ASparrowCharacter>());
+
+	for (auto &OverlappingActor : OverlappingActors)
+	{
+		OverlappingActor->TakeDamage(
+			DamageAmount,
+			FDamageEvent(),
+			UGameplayStatics::GetPlayerController(GetWorld(), 0),
+			Sparrow
+		);
+	}
+}
+
+void USparrowUltimateComponent::Hide()
+{
+	SetVisibility(false, true);
+	Direction = MinRange;
 }
