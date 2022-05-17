@@ -6,6 +6,7 @@
 #include <Kismet/GameplayStatics.h>
 
 #include "../SparrowCharacter.h"
+#include "../Meteor.h"
 
 void USparrowUltimateComponent::BeginPlay()
 {
@@ -91,5 +92,22 @@ void USparrowUltimateComponent::SetDirection(float AxisValue)
 	if (NewDirection >= MinRange && NewDirection <= MaxRange)
 	{
 		Direction = NewDirection;
+	}
+}
+
+void USparrowUltimateComponent::DropMeteor()
+{
+	if (!MeteorClass)
+	{
+		return;
+	}
+
+	const FVector SpawnLocation = Sparrow->GetActorLocation() + FVector(0.f, 0.f, MeteorSpawnHeight);
+	const FVector HitLocation = Result.LastTraceDestination.Location;
+	AMeteor* Meteor = GetWorld()->SpawnActor<AMeteor>(MeteorClass);
+
+	if (Meteor)
+	{
+		Meteor->SetActorLocation(SpawnLocation);
 	}
 }

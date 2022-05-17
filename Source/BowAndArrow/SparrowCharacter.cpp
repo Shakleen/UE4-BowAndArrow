@@ -92,11 +92,21 @@ inline void ASparrowCharacter::BindMovementFunctions(UInputComponent* PlayerInpu
 
 void ASparrowCharacter::MoveForwardOrBackward(float Value)
 {
+	if (State.bIsAimingUltimate)
+	{
+		return;
+	}
+
 	MoveCharacter(EAxis::X, Value);
 }
 
 void ASparrowCharacter::MoveRightOrLeft(float Value)
 {
+	if (State.bIsAimingUltimate)
+	{
+		return;
+	}
+
 	MoveCharacter(EAxis::Y, Value);
 }
 
@@ -162,7 +172,7 @@ void ASparrowCharacter::LowerBow()
 
 inline void ASparrowCharacter::SetAimMode(bool bIsAiming)
 {
-	if (!SparrowMovement)
+	if (!SparrowMovement || State.bIsAimingUltimate)
 	{
 		return;
 	}
@@ -246,6 +256,11 @@ void ASparrowCharacter::BindUltimateFunctions(UInputComponent* PlayerInputCompon
 
 void ASparrowCharacter::AimUltimate()
 {
+	if (State.bIsAimingBow)
+	{
+		return;
+	}
+
 	State.bIsAimingUltimate = true;
 	Ultimate->SetVisibility(true, true);
 	SetControlRotationStatus(true);
@@ -260,6 +275,7 @@ void ASparrowCharacter::ReleaseUltimate()
 {
 	State.bIsAimingUltimate = false;
 	Ultimate->SetVisibility(false, true);
+	Ultimate->DropMeteor();
 	SetControlRotationStatus(false);
 	ToggleAnimation(true);
 }

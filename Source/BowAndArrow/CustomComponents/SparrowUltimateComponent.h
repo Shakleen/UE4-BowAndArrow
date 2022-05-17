@@ -9,6 +9,7 @@
 
 class UDecalComponent;
 class ASparrowCharacter;
+class AMeteor;
 
 UCLASS()
 class BOWANDARROW_API USparrowUltimateComponent : public UStaticMeshComponent
@@ -18,6 +19,7 @@ class BOWANDARROW_API USparrowUltimateComponent : public UStaticMeshComponent
 public:
 	void AimUltimate(float DeltaTime);
 	void SetDirection(float AxisValue);
+	void DropMeteor();
 
 protected:
 	virtual void BeginPlay() override;
@@ -46,6 +48,12 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Configuration)
 		float MinRange = 0.f;
+
+	UPROPERTY(EditAnywhere, Category = Configuration)
+		float MeteorSpawnHeight = 1000.f;
+
+	UPROPERTY(EditAnywhere, Category = Configuration)
+		TSubclassOf<AMeteor> MeteorClass;
 
 	UPROPERTY(VisibleAnywhere, Transient, Category = Configuration)
 		float Direction = 0.f;
