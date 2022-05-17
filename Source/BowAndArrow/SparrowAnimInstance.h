@@ -47,6 +47,9 @@ public:
 		bool bIsAiming = false;
 
 	UPROPERTY(BlueprintReadOnly)
+		bool bIsAimingUltimate = false;
+
+	UPROPERTY(BlueprintReadOnly)
 		FSparrowVelocity Velocity;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -62,16 +65,13 @@ public:
 	virtual void NativeInitializeAnimation();
 	virtual void NativeUpdateAnimation(float DeltaSeconds);
 
-	UFUNCTION(BlueprintCallable)
-		void PauseAnimation();
-
 private:
 	void HandleVelocityUpdate();
 	void HandleAimOffsetUpdate();
 	float GetNewAimAngle(float Previous, float New) const;
 
 	void OnAimStateChange(bool bIsAiming);
-
+	void OnUltimateAim(bool bIsAiming);
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

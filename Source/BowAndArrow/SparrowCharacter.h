@@ -14,6 +14,7 @@ class UHealthComponent;
 class USparrowUltimateComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnAimStateChangeDelegate, bool bIsAiming);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnUltimateAimDelegate, bool bIsAiming);
 
 USTRUCT(BlueprintType)
 struct FSparrowState
@@ -43,10 +44,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-	void ToggleAnimation(bool bPlay);
 	
 public:
 	FOnAimStateChangeDelegate OnAimStateChange;
+	FOnUltimateAimDelegate OnUltimateAim;
 
 private:
 	void BindMovementFunctions(UInputComponent* PlayerInputComponent);
@@ -97,9 +98,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Configurations)
 		UAnimMontage* FireMontage;
-
-	UPROPERTY(EditAnywhere, Category = Configurations)
-		UAnimMontage* UltAbilityMontage;
 
 	UPROPERTY(EditAnywhere, Category = Configurations)
 		TSubclassOf<AArrow> ArrowClass;

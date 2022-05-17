@@ -68,11 +68,6 @@ float ASparrowCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEven
 	return AppliedDamage;
 }
 
-void ASparrowCharacter::ToggleAnimation(bool bPlay)
-{
-	GetMesh()->bPauseAnims = !bPlay;
-}
-
 #pragma region Movement function bindings
 
 inline void ASparrowCharacter::BindMovementFunctions(UInputComponent* PlayerInputComponent)
@@ -264,11 +259,7 @@ void ASparrowCharacter::AimUltimate()
 	State.bIsAimingUltimate = true;
 	Ultimate->SetVisibility(true, true);
 	SetControlRotationStatus(true);
-
-	if (UltAbilityMontage)
-	{
-		PlayAnimMontage(UltAbilityMontage);
-	}
+	OnUltimateAim.Broadcast(true);
 }
 
 void ASparrowCharacter::ReleaseUltimate()
@@ -276,7 +267,7 @@ void ASparrowCharacter::ReleaseUltimate()
 	State.bIsAimingUltimate = false;
 	Ultimate->DropMeteor();
 	SetControlRotationStatus(false);
-	ToggleAnimation(true);
+	OnUltimateAim.Broadcast(false);
 }
 
 void ASparrowCharacter::SetUltimateRange(float AxisValue)

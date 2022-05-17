@@ -14,12 +14,18 @@ void USparrowAnimInstance::NativeInitializeAnimation()
 	if (Player)
 	{
 		Player->OnAimStateChange.AddUObject(this, &USparrowAnimInstance::OnAimStateChange);
+		Player->OnUltimateAim.AddUObject(this, &USparrowAnimInstance::OnUltimateAim);
 	}
 }
 
 void USparrowAnimInstance::OnAimStateChange(bool bIsAiming)
 {
 	AnimState.bIsAiming = bIsAiming;
+}
+
+void USparrowAnimInstance::OnUltimateAim(bool bIsAiming)
+{
+	AnimState.bIsAimingUltimate = bIsAiming;
 }
 
 void USparrowAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -33,16 +39,6 @@ void USparrowAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	HandleVelocityUpdate();
 	HandleAimOffsetUpdate();
-}
-
-void USparrowAnimInstance::PauseAnimation()
-{
-	if (!Player)
-	{
-		return;
-	}
-
-	Player->ToggleAnimation(false);
 }
 
 void USparrowAnimInstance::HandleVelocityUpdate()
